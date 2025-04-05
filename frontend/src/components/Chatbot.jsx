@@ -32,11 +32,14 @@ const Chatbot = () => {
         replyText = "Group chat feature is coming soon! Stay tuned 😉";
       } else if (lowerInput.includes("features")) {
         replyText = "This app lets you: 👥 chat 1-on-1, 📝 view message history, 🔔 get real-time updates, and 🤖 chat with me!";
-      } else if (lowerInput.includes("is this real time")) {
+      } 
+      else if (lowerInput.includes("is this real time")) {
         replyText = "Yes! All messages are sent and received in real-time using WebSockets.";
-      } else if (lowerInput.includes("how to start chat")) {
+      } 
+      else if (lowerInput.includes("how to start chat")) {
         replyText = "Click on a user in the sidebar to start chatting with them.";
-      } else if (lowerInput.includes("profile") || lowerInput.includes("account")) {
+      } 
+      else if (lowerInput.includes("profile") || lowerInput.includes("account")) {
         replyText = "You can view and edit your profile from the top-right menu in the sidebar.";
       } else if (lowerInput.includes("logout")) {
         replyText = "To log out, click the logout button in the sidebar or top-right corner.";
