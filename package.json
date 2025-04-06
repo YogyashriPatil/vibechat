@@ -4,10 +4,13 @@
   "description": "Highlights:",
   "main": "index.js",
   "scripts": {
-    "build": "",
-    "start":""
+    "build": "npm install --prefix && npm install --prefix frontend && npm run build --prefix frontend",
+    "start": "npm run start --prefix backend"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "vite": "^6.2.5"
+  }
 }
