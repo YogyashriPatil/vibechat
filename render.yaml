@@ -13,7 +13,7 @@ services:
       - key: MONGODB_URI
         value: mongodb+srv://patilyogyashripatilrajshri:yogiraju%402025@cluster0.dhv3a.mongodb.net/myDatabase?retryWrites=true&w=majority&appName=Cluster0
       - key: JWT_SECRET
-        value: myscretkey
+        value: d279c7543790ac6e46e2d93b4d069d197432a8916086e1f6f605f12987b9b8f7845149509c5e602857bdfbc70372fce3fd781870adbec28bc790e15da12b4906
       - key: CLOUDINARY_API_KEY
         value: 329372124222229
 
