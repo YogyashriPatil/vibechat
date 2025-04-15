@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: vibechat-backend
+    env: node
+    repo: https://github.com/YogyashriPatil/vibechat
+    branch: main
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        value: mongodb+srv://patilyogyashripatilrajshri:yogiraju%402025@cluster0.dhv3a.mongodb.net/myDatabase?retryWrites=true&w=majority&appName=Cluster0
+      - key: JWT_SECRET
+        value: myscretkey
+      - key: CLOUDINARY_API_KEY
+        value: 329372124222229
+
+  - type: web
+    name: vibechat-frontend
+    env: static
+    repo: https://github.com/YogyashriPatil/vibechat
+    branch: main
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
