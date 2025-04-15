@@ -18,7 +18,7 @@ const PORT=process.env.PORT || 5001;
 console.log("PORT from .env:", process.env.PORT);
 console.log("MONGODB_URI from .env:", process.env.MONGODB_URI);
 app.use(cors({
-    origin:"http://localhost:5173",
+    origin:"https://vibechat-2-z3lg.onrender.com",
     methods:["GET","POST","PUT","DELETE"],
     credentials:true,
     }
