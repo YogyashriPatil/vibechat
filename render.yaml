@@ -6,7 +6,7 @@ services:
     branch: main
     rootDir: backend
     buildCommand: npm install
-    startCommand: npm start
+    startCommand: node src/index.js
     envVars:
       - key: PORT
         value: 10000
