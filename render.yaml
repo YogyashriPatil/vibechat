@@ -6,7 +6,7 @@ services:
     branch: main
     rootDir: backend
     buildCommand: npm install
-    startCommand: node src/index.js
+    startCommand: cd backend && node src/index.js
     envVars:
       - key: PORT
         value: 10000
@@ -24,4 +24,6 @@ services:
     branch: main
     rootDir: frontend
     buildCommand: npm install && npm run build
-    staticPublishPath: dist
+    publishDir: build
+    rootDir: frontend
+    staticPublishPath: frontend/dist
