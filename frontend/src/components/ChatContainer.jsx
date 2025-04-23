@@ -5,6 +5,7 @@ import MessageInput from "./MessageInput";
 import MessageSkeleton from "./skeletons/MessageSkeleton";
 import { useAuthStore } from "../store/useAuthStore";
 import {formatMessageTime} from "../lib/utils";
+import { io } from "socket.io-client";
 
 const ChatContainer = () => {
   const {
@@ -17,6 +18,11 @@ const ChatContainer = () => {
   } = useChatStore();
   const { authUser } = useAuthStore();
   const messageEndRef = useRef(null);
+  const [isVideoCallActive, setIsVideoCallActive] = useState(false);
+  const [remoteStream, setRemoteStream] = useState(null);
+  const [localStream, setLocalStream] = useState(null);
+  const peerConnectionRef = useRef(null);
+  const socket = useRef(null);
 
   useEffect(() => {
     getMessages(selectedUser?._id);
@@ -29,6 +35,84 @@ const ChatContainer = () => {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
+const initiateVideoCall = async () => {
+    try {
+      // Open user media (camera and microphone)
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+      setLocalStream(stream);
+
+      // Set up PeerConnection
+      const peerConnection = new RTCPeerConnection();
+      peerConnectionRef.current = peerConnection;
+
+      // Add local stream to the connection
+      stream.getTracks().forEach((track) => peerConnection.addTrack(track, stream));
+
+      // Set up Socket.IO signaling
+      socket.current = io("https://your-backend-url", {
+        transports: ["websocket"],
+      });
+
+      socket.current.on("offer", async ({ offer, sender }) => {
+        if (selectedUser._id === sender) {
+          await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+          const answer = await peerConnection.createAnswer();
+          await peerConnection.setLocalDescription(answer);
+          socket.current.emit("answer", { answer, target: sender });
+        }
+      });
+
+      socket.current.on("answer", async ({ answer }) => {
+        await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+      });
+
+      socket.current.on("ice-candidate", ({ candidate }) => {
+        if (candidate) {
+          peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+        }
+      });
+
+      peerConnection.onicecandidate = (event) => {
+        if (event.candidate) {
+          socket.current.emit("ice-candidate", {
+            candidate: event.candidate,
+            target: selectedUser._id,
+          });
+        }
+      };
+
+      peerConnection.ontrack = (event) => {
+        setRemoteStream(event.streams[0]);
+      };
+
+      // Create and send the offer
+      const offer = await peerConnection.createOffer();
+      await peerConnection.setLocalDescription(offer);
+      socket.current.emit("offer", { offer, target: selectedUser._id });
+
+      setIsVideoCallActive(true);
+    } catch (error) {
+      console.error("Error starting video call:", error);
+    }
+  };
+
+  const endVideoCall = () => {
+    setIsVideoCallActive(false);
+    if (localStream) {
+      localStream.getTracks().forEach((track) => track.stop());
+    }
+    if (peerConnectionRef.current) {
+      peerConnectionRef.current.close();
+    }
+    if (socket.current) {
+      socket.current.disconnect();
+    }
+    setLocalStream(null);
+    setRemoteStream(null);
+  };
 
   if (isMessagesLoading) {
     return (
@@ -81,8 +165,33 @@ const ChatContainer = () => {
           </div>
         ))}
       </div>
-
-      <MessageInput />
+      {isVideoCallActive ? (
+        <div className="video-call-container">
+          <video
+            className="local-video"
+            autoPlay
+            muted
+            playsInline
+            ref={(video) => {
+              if (video && localStream) video.srcObject = localStream;
+            }}
+          />
+          <video
+            className="remote-video"
+            autoPlay
+            playsInline
+            ref={(video) => {
+              if (video && remoteStream) video.srcObject = remoteStream;
+            }}
+          />
+          <button onClick={endVideoCall} className="btn btn-danger">
+            End Call
+          </button>
+        </div>
+      ) : (
+        <MessageInput onVideoCall={initiateVideoCall} />
+      )}
+      {/* <MessageInput /> */}
     </div>
   );
 };
