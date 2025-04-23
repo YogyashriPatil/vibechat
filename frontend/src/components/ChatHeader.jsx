@@ -29,7 +29,7 @@ const ChatHeader = () => {
         {/* Video Call Button */}
         <button
           onClick={onVideoCall}
-          className="video-call-btn p-2 rounded-full bg-blue-500 text-white"
+          className="video-call-btn p-2 rounded-full bg-blue-500 text-white  hover:bg-blue-700 focus:outline-none"
           title="Start Video Call"
         >
           <FaVideo />
