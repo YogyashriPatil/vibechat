@@ -6,7 +6,9 @@ import { FaVideo } from "react-icons/fa";
 const ChatHeader = () => {
   const { selectedUser, setSelectedUser } = useChatStore();
   const { onlineUsers } = useAuthStore();
-
+  const onVideoCall = () => {
+    console.log("Starting video call with", selectedUser.fullName);
+  };
   return (
     <div className="p-2.5 border-b border-base-300">
       <div className="flex items-center justify-between">
@@ -25,15 +27,16 @@ const ChatHeader = () => {
               {onlineUsers.includes(selectedUser._id) ? "Online" : "Offline"}
             </p>
           </div>
+
+          {/* Video Call Button */}
+          <button
+            onClick={onVideoCall}
+            className="video-call-btn p-2 rounded-full bg-blue-500 text-white hover:bg-blue-700 focus:outline-none"
+            title="Start Video Call"
+          >
+            <FaVideo />
+          </button>
         </div>
-        {/* Video Call Button */}
-        <button
-          onClick={onVideoCall}
-          className="video-call-btn p-2 rounded-full bg-blue-500 text-white  hover:bg-blue-700 focus:outline-none"
-          title="Start Video Call"
-        >
-          <FaVideo />
-        </button>
         {/* Close button */}
         <button onClick={() => setSelectedUser(null)}>
           <X />
