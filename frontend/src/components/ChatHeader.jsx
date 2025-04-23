@@ -6,6 +6,9 @@ import { FaVideo } from "react-icons/fa";
 const ChatHeader = () => {
   const { selectedUser, setSelectedUser } = useChatStore();
   const { onlineUsers } = useAuthStore();
+  if (!selectedUser) {
+    return null; // Do not render the header if no user is selected
+  }
   const onVideoCall = () => {
     console.log("Starting video call with", selectedUser.fullName);
   };
@@ -31,7 +34,7 @@ const ChatHeader = () => {
           {/* Video Call Button */}
           <button
             onClick={onVideoCall}
-            className="video-call-btn p-2 rounded-full bg-blue-500 text-white hover:bg-blue-700 focus:outline-none"
+            className="video-call-btn p-2 rounded-full bg-blue-500 text-black hover:bg-blue-700 focus:outline-none"
             title="Start Video Call"
           >
             <FaVideo />
