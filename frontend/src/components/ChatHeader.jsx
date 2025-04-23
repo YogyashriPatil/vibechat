@@ -1,6 +1,7 @@
 import { X } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore.js";
 import { useChatStore } from "../store/useChatStore.js";
+import { FaVideo } from "react-icons/fa";
 
 const ChatHeader = () => {
   const { selectedUser, setSelectedUser } = useChatStore();
@@ -25,7 +26,14 @@ const ChatHeader = () => {
             </p>
           </div>
         </div>
-
+        {/* Video Call Button */}
+        <button
+          onClick={onVideoCall}
+          className="video-call-btn p-2 rounded-full bg-blue-500 text-white"
+          title="Start Video Call"
+        >
+          <FaVideo />
+        </button>
         {/* Close button */}
         <button onClick={() => setSelectedUser(null)}>
           <X />

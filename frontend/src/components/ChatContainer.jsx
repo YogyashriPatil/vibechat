@@ -6,6 +6,7 @@ import MessageSkeleton from "./skeletons/MessageSkeleton";
 import { useAuthStore } from "../store/useAuthStore";
 import {formatMessageTime} from "../lib/utils";
 import { io } from "socket.io-client";
+import { FaVideo } from 'react-icons/fa';
 
 const ChatContainer = () => {
   const {
@@ -52,7 +53,7 @@ const initiateVideoCall = async () => {
       stream.getTracks().forEach((track) => peerConnection.addTrack(track, stream));
 
       // Set up Socket.IO signaling
-      socket.current = io("https://your-backend-url", {
+      socket.current = io("https://chatapp-e89y.onrender.com", {
         transports: ["websocket"],
       });
 
@@ -126,8 +127,8 @@ const initiateVideoCall = async () => {
 
   return (
     <div className="flex-1 flex flex-col overflow-auto">
-      <ChatHeader />
-
+      <ChatHeader onVideoCall={initiateVideoCall}/>
+      
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((message) => (
           <div
